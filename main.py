@@ -95,7 +95,8 @@ while i > 0:
 coeffs.reverse()
 
 print(
-    "".join(
+    "f(x) = "
+    + "".join(
         f"{" + " if i>0 and coeff>0 else " - " if i>0 and coeff<0 else "-" if coeff<0 else ""}{abs(coeff)}x{f"^{degree - i}" if degree - i > 1 else ""}"
         for i, coeff in enumerate(coeffs)
     )

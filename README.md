@@ -1,0 +1,5 @@
+# Polynomial regression
+
+This project aims to experiment with the construction of n<sup>th</sup>-degree polynomials, such that they pass through a given set of points.
+
+The program `main.py` outputs the equation of a polynomial that passes through every point in the list `points`, which begins on line 40 of `main.py`.
