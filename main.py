@@ -1,3 +1,4 @@
+import json
 from copy import deepcopy
 from typing import Self
 
@@ -37,14 +38,16 @@ class Equation:
         )
 
 
-points = [
-    (4, 20),
-    (6, 9),
-    (69, 420),
-    (420, 69),
-    (42069, 69420),
-    (69420, 42069),
-]
+with open("points.json") as f:
+    points = json.load(f)
+
+zy = 0
+
+for i, (x, y) in enumerate(points):
+    if x == 0:
+        points.pop(i)
+        zy = y
+        break
 
 degree = len(points)
 
@@ -52,7 +55,7 @@ equations = []
 
 # leave as loop for conditional point selection
 for x, y in points:
-    equations.append(Equation([x**i for i in range(degree, 0, -1)], y))
+    equations.append(Equation([x**i for i in range(degree, 0, -1)], y - zy))
 
 old_collapsed = deepcopy(equations)
 new_collapsed = []
@@ -94,10 +97,28 @@ while i > 0:
 
 coeffs.reverse()
 
-print(
-    "f(x) = "
-    + "".join(
-        f"{" + " if i>0 and coeff>0 else " - " if i>0 and coeff<0 else "-" if coeff<0 else ""}{abs(coeff)}x{f"^{degree - i}" if degree - i > 1 else ""}"
-        for i, coeff in enumerate(coeffs)
+expression = ""
+
+for i, coeff in enumerate(coeffs):
+    if not coeff:
+        continue
+    term_str = (
+        ("" if coeff > 0 else "-") if not expression else " + " if coeff > 0 else " - "
     )
-)
+    power = degree - i
+    absv = abs(coeff)
+    if absv != 1:
+        term_str += str(absv)
+    term_str += "x" + (f"^{power}" if power != 1 else "")
+    expression += term_str
+
+if zy:
+    if not expression:
+        expression = str(zy)
+    else:
+        expression += (" + " if zy > 0 else " - ") + str(abs(zy))
+
+if not expression:
+    expression = "0"
+
+print("f(x) =", expression)
